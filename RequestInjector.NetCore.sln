@@ -3,7 +3,12 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27004.2009
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RequestInjector.NetCore", "RequestInjector.NetCore\RequestInjector.NetCore.csproj", "{9D118892-7E5F-4478-B231-7566C68E81C1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RequestInjector.NetCore", "RequestInjector.NetCore\RequestInjector.NetCore.csproj", "{9D118892-7E5F-4478-B231-7566C68E81C1}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{2B14A0D5-3795-4282-B2B3-5FE2BE58A58F}"
+	ProjectSection(SolutionItems) = preProject
+		icon.png = icon.png
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
