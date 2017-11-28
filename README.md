@@ -21,11 +21,11 @@ var provider = services.BuildServiceProvider();
 
 services.AddMvc(config =>
 {
-    config.ModelMetadataDetailsProviders.Add(new CustomMetadataProvider());
+    config.ModelMetadataDetailsProviders.Add(new RequestInjectionMetadataProvider());
     config.ModelBinderProviders.Insert(0, new QueryModelBinderProvider(provider));
 })
 .AddJsonOptions(options =>
 {
-    options.SerializerSettings.Converters.Add(new RequestHandlerConverter<IRequest>(provider));
+    options.SerializerSettings.Converters.Add(new RequestInjectionHandler<IRequest>(provider));
 });
 ```
