@@ -2,7 +2,7 @@
 
 namespace RequestInjector.NetCore
 {
-    class RequestInjectionMetadataProvider : IMetadataDetailsProvider, IDisplayMetadataProvider
+    public class RequestInjectionMetadataProvider : IMetadataDetailsProvider, IDisplayMetadataProvider
     {
         public void CreateDisplayMetadata(DisplayMetadataProviderContext context)
         {
