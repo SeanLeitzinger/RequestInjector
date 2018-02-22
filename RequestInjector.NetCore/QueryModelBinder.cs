@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
-using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -8,17 +8,17 @@ namespace RequestInjector.NetCore
 {
     public class QueryModelBinderProvider : IModelBinderProvider
     {
-        IServiceProvider container;
+        IServiceCollection collection;
 
-        public QueryModelBinderProvider(IServiceProvider container)
+        public QueryModelBinderProvider(IServiceCollection collection)
         {
-            this.container = container;
+            this.collection = collection;
         }
 
         public IModelBinder GetBinder(ModelBinderProviderContext context)
         {
             if (context?.BindingInfo?.BindingSource == BindingSource.Query)
-                return new QueryModelBinder(container);
+                return new QueryModelBinder(collection);
 
             return null;
         }
@@ -26,16 +26,17 @@ namespace RequestInjector.NetCore
 
     public class QueryModelBinder : IModelBinder
     {
-        IServiceProvider container;
+        IServiceCollection collection;
 
-        public QueryModelBinder(IServiceProvider container)
+        public QueryModelBinder(IServiceCollection collection)
         {
-            this.container = container;
+            this.collection = collection;
         }
 
         public Task BindModelAsync(ModelBindingContext bindingContext)
         {
-            var modelInstance = container.GetService(bindingContext.ModelType);
+            var provider = collection.BuildServiceProvider();
+            var modelInstance = provider.GetService(bindingContext.ModelType);
             var nameValuePairs = bindingContext.ActionContext.HttpContext.Request.Query.ToDictionary(m => m.Key, m => m.Value.FirstOrDefault());
 
             var json = JsonConvert.SerializeObject(nameValuePairs);

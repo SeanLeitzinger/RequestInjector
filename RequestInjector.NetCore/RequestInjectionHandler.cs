@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System;
 
@@ -6,16 +7,18 @@ namespace RequestInjector.NetCore
 {
     public class RequestInjectionHandler<T> : CustomCreationConverter<T>
     {
-        IServiceProvider container;
+        IServiceCollection collection;
 
-        public RequestInjectionHandler(IServiceProvider serviceProvider)
+        public RequestInjectionHandler(IServiceCollection collection)
         {
-            this.container = serviceProvider;
+            this.collection = collection;
         }
 
         public override T Create(Type objectType)
         {
-            return (T)container.GetService(objectType);
+            var provider = collection.BuildServiceProvider();
+
+            return (T)provider.GetService(objectType);
         }
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
