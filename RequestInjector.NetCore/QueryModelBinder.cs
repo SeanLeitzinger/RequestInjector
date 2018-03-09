@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -9,16 +11,18 @@ namespace RequestInjector.NetCore
     public class QueryModelBinderProvider : IModelBinderProvider
     {
         IServiceCollection collection;
+        IServiceProvider provider;
 
         public QueryModelBinderProvider(IServiceCollection collection)
         {
             this.collection = collection;
+            provider = collection.BuildServiceProvider();
         }
 
         public IModelBinder GetBinder(ModelBinderProviderContext context)
         {
             if (context?.BindingInfo?.BindingSource == BindingSource.Query)
-                return new QueryModelBinder(collection);
+                return new QueryModelBinder(provider);
 
             return null;
         }
@@ -26,17 +30,17 @@ namespace RequestInjector.NetCore
 
     public class QueryModelBinder : IModelBinder
     {
-        IServiceCollection collection;
+        IServiceProvider provider;
 
-        public QueryModelBinder(IServiceCollection collection)
+        public QueryModelBinder(IServiceProvider provider)
         {
-            this.collection = collection;
+            this.provider = provider;
         }
 
         public Task BindModelAsync(ModelBindingContext bindingContext)
         {
-            var provider = collection.BuildServiceProvider();
-            var modelInstance = provider.GetService(bindingContext.ModelType);
+            var httpContext = provider.GetService<IHttpContextAccessor>();
+            var modelInstance = httpContext.HttpContext.RequestServices.GetRequiredService(bindingContext.ModelType);
             var nameValuePairs = bindingContext.ActionContext.HttpContext.Request.Query.ToDictionary(m => m.Key, m => m.Value.FirstOrDefault());
 
             var json = JsonConvert.SerializeObject(nameValuePairs);
@@ -57,5 +61,4 @@ namespace RequestInjector.NetCore
             errorArgs.ErrorContext.Handled = true;
         }
     }
-
 }
