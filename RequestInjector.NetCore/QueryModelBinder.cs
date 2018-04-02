@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using System;
@@ -10,13 +9,11 @@ namespace RequestInjector.NetCore
 {
     public class QueryModelBinderProvider : IModelBinderProvider
     {
-        IServiceCollection collection;
         IServiceProvider provider;
 
-        public QueryModelBinderProvider(IServiceCollection collection)
+        public QueryModelBinderProvider(IServiceProvider provider)
         {
-            this.collection = collection;
-            provider = collection.BuildServiceProvider();
+            this.provider = provider;
         }
 
         public IModelBinder GetBinder(ModelBinderProviderContext context)
@@ -39,8 +36,8 @@ namespace RequestInjector.NetCore
 
         public Task BindModelAsync(ModelBindingContext bindingContext)
         {
-            var httpContext = provider.GetService<IHttpContextAccessor>();
-            var modelInstance = httpContext.HttpContext.RequestServices.GetRequiredService(bindingContext.ModelType);
+            var scope = (IServiceScope)bindingContext.HttpContext.Items["scope"];
+            var modelInstance = scope.ServiceProvider.GetRequiredService(bindingContext.ModelType);
             var nameValuePairs = bindingContext.ActionContext.HttpContext.Request.Query.ToDictionary(m => m.Key, m => m.Value.FirstOrDefault());
 
             var json = JsonConvert.SerializeObject(nameValuePairs);

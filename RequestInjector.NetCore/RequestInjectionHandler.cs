@@ -8,20 +8,19 @@ namespace RequestInjector.NetCore
 {
     public class RequestInjectionHandler<T> : CustomCreationConverter<T>
     {
-        IServiceCollection collection;
         IServiceProvider provider;
 
-        public RequestInjectionHandler(IServiceCollection collection)
+        public RequestInjectionHandler(IServiceProvider provider)
         {
-            this.collection = collection;
-            provider = collection.BuildServiceProvider();
+            this.provider = provider;
         }
 
         public override T Create(Type objectType)
         {
-            var httpContext = provider.GetService<IHttpContextAccessor>();
+            var httpContext = provider.GetRequiredService<IHttpContextAccessor>();
+            var scope = (IServiceScope)httpContext.HttpContext.Items["scope"];
 
-            return (T)httpContext.HttpContext.RequestServices.GetRequiredService(objectType);
+            return (T)scope.ServiceProvider.GetRequiredService(objectType);
         }
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
@@ -35,3 +34,4 @@ namespace RequestInjector.NetCore
             return obj;
         }
     }
+}
