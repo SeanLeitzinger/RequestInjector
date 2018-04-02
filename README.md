@@ -28,4 +28,18 @@ services.AddMvc(config =>
 {
     options.SerializerSettings.Converters.Add(new RequestInjectionHandler<IRequest>(provider));
 });
+
+Finally, add the middleware below to your Configure method of your start up. This wraps the provider in a scope for the request:
+
+app.Use(async (context, next) =>
+{
+    var scopeFactory = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>();
+
+    using (var scope = scopeFactory.CreateScope())
+    {
+        context.Items.Add("scope", scope);
+
+        await next.Invoke();
+    }
+});
 ```
