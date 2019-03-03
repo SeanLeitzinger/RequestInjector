@@ -2,6 +2,20 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <PackageId>RequestInjector</PackageId>
+    <Version>1.1.0</Version>
+    <Authors>Sean Leitzinger</Authors>
+    <Company></Company>
+    <Product />
+    <Description>Light weight library to enable directly injecting into requests in Asp.Net Core</Description>
+    <Copyright>Copyright 2019</Copyright>
+    <PackageLicenseUrl>https://github.com/SeanLeitzinger/RequestInjector/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/SeanLeitzinger/RequestInjector</PackageProjectUrl>
+    <PackageIconUrl>https://raw.githubusercontent.com/SeanLeitzinger/RequestInjector/master/icon.png</PackageIconUrl>
+    <PackageTags>asp-net-core-web-api asp-net-core dependency-injection DI ASP.NET injection Core</PackageTags>
+    <PackageReleaseNotes>Updated .NET Core version. Updated dependency resolution.</PackageReleaseNotes>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/SeanLeitzinger/RequestInjector</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>
