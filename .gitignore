@@ -287,3 +287,4 @@ __pycache__/
 *.odx.cs
 *.xsd.cs
 /RequestInjector.NetCore/RequestInjector.NetCore.nuspec
+/nuget.exe

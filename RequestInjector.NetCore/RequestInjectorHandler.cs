@@ -6,11 +6,11 @@ using System;
 
 namespace RequestInjector.NetCore
 {
-    public class RequestInjectionHandler<T> : CustomCreationConverter<T>
+    public class RequestInjectorHandler<T> : CustomCreationConverter<T>
     {
         IServiceProvider provider;
 
-        public RequestInjectionHandler(IServiceProvider provider)
+        public RequestInjectorHandler(IServiceProvider provider)
         {
             this.provider = provider;
         }
