@@ -11,7 +11,7 @@ services.Scan(scan => scan
               .FromAssembliesOf(typeof(IRequest), typeof(GetTestRequest))
               .AddClasses()
               .AsSelf()
-              .WithTransientLifetime());
+              .WithScopedLifetime());
 ```
 
 **After** your dependencies are registered, add the following code to the StartUp:
@@ -21,26 +21,10 @@ var provider = services.BuildServiceProvider();
 
 services.AddMvc(config =>
 {
-    config.ModelMetadataDetailsProviders.Add(new RequestInjectionMetadataProvider());
-    config.ModelBinderProviders.Insert(0, new QueryModelBinderProvider(provider));
+    config.ModelMetadataDetailsProviders.Add(new RequestInjectorMetadataProvider());
+    config.ModelBinderProviders.Insert(0, new RequestInjectorModelBinderProvider());
 })
 .AddJsonOptions(options =>
 {
-    options.SerializerSettings.Converters.Add(new RequestInjectionHandler<IRequest>(provider));
+    options.SerializerSettings.Converters.Add(new RequestInjectorHandler<IRequest>(provider));
 });
-```
-Finally, add the middleware below to your Configure method of your start up. This wraps the provider in a scope for the request:
-
-```
-app.Use(async (context, next) =>
-{
-    var scopeFactory = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>();
-
-    using (var scope = scopeFactory.CreateScope())
-    {
-        context.Items.Add("scope", scope);
-
-        await next.Invoke();
-    }
-});
-```
