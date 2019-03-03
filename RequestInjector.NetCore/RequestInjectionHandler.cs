@@ -18,9 +18,8 @@ namespace RequestInjector.NetCore
         public override T Create(Type objectType)
         {
             var httpContext = provider.GetRequiredService<IHttpContextAccessor>();
-            var scope = (IServiceScope)httpContext.HttpContext.Items["scope"];
 
-            return (T)scope.ServiceProvider.GetRequiredService(objectType);
+            return (T)httpContext.HttpContext.RequestServices.GetRequiredService(objectType);
         }
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
