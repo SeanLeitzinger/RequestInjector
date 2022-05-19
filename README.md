@@ -2,7 +2,7 @@
 Light weight library to enable directly injecting into requests in Asp.Net
 
 ### Usage
-For more info see my post on [Request Injection](http://dotnetcultist.com/request-injection-in-asp-net-core/). This uses the built in 
+For more info see my post on [Request Injection](https://edgesidesolutions.com/request-injection-in-asp-net-core/). This uses the built in 
 Microsoft Dependency Injection. Extensions for other IoC containers can be added if people want it. Add the package 
 to your project and then register your depdendencies. Mark your requests with the IRequest interface. Example using Scrutor:
 
